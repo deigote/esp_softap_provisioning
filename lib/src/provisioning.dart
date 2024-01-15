@@ -20,21 +20,29 @@ class Provisioning {
   Future<bool> establishSession() async {
     try {
       SessionData? responseData;
-      await transport!.connect();
+      bool connected = await transport!.connect();
+      print("establishSession: connected ${connected}");
+      int loops = 0;
       while (true) {
+        loops++;
+        print("establishSession: iteration ${loops}");
         var request = await security!.securitySession(responseData);
+        print("establishSession: securitySession request: $request");
         if (request == null) {
+          print("establishSession: request is null");
           return true;
         }
         var response = await transport!.sendReceive(
             'prov-session', request.writeToBuffer());
+        print("establishSession: sendReceive response is ${response} ${response.toString()}");
         if (response.isEmpty) {
-          throw Exception('Empty response');
+          throw Exception('establishSession: empty response');
         }
         responseData = SessionData.fromBuffer(response);
+        print("establishSession: responseData ${responseData}");
       }
     } catch (e, s) {
-      print('EstablishSession error $e');
+      print('establishSession: error $e');
       print(s);
       return false;
     }

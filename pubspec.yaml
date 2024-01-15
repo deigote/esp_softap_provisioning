@@ -15,7 +15,8 @@ dependencies:
   logger: 
   string_validator: 
   http: 
-  collection: 
+  collection:
+  dio:
 
 dev_dependencies:
   flutter_test:
